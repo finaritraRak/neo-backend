@@ -1,0 +1,584 @@
+<!-- templates/admin/blog/blogpost/change_form.html -->
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.seo-indicator-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.seo-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.seo-indicator-good { background: #28a745; }
+.seo-indicator-warning { background: #ffc107; }
+.seo-indicator-bad { background: #dc3545; }
+.seo-indicator-neutral { background: #6c757d; }
+
+.seo-indicator-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+.seo-indicator-text-good { color: #28a745; }
+.seo-indicator-text-warning { color: #ffc107; }
+.seo-indicator-text-bad { color: #dc3545; }
+.seo-indicator-text-neutral { color: #6c757d; }
+
+.field-box {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.check-item {
+    margin: 4px 0;
+    padding: 3px 0;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.check-success { color: #28a745; }
+.check-warning { color: #fd7e14; }
+.check-error { color: #dc3545; }
+
+.seo-score-header {
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+</style>
+{% endblock %}
+
+{% block field_sets %}
+    {{ block.super }}
+    
+    <!-- Widget SEO Pro -->
+    <div class="module" id="seo-analysis-widget" style="
+        margin-top: 25px; 
+        border: 1px solid #e1e5e9; 
+        border-radius: 6px; 
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        background: linear-gradient(to bottom, #ffffff, #fafafa);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    ">
+        <h2 style="
+            background: linear-gradient(to right, #4a6fa5, #2c3e50); 
+            padding: 12px 15px; 
+            margin: 0; 
+            border-bottom: 1px solid #dee2e6;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px 6px 0 0;
+        ">
+            <span style="display: inline-block; width: 20px; text-align: center;">📊</span>
+            Analyse SEO en Temps Réel
+        </h2>
+        <div style="padding: 20px;">
+            <div id="seo-summary" style="
+                display: flex; 
+                align-items: center; 
+                gap: 20px;
+                margin-bottom: 20px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border: 1px solid #e9ecef;
+            ">
+                <div style="text-align: center;">
+                    <div style="
+                        font-size: 28px; 
+                        font-weight: 700; 
+                        color: #2c3e50;
+                        margin-bottom: 5px;
+                    ">
+                        <span id="seo-score">--</span><span style="font-size: 16px; color: #6c757d;">/100</span>
+                    </div>
+                    <div style="font-size: 12px; color: #6c757d; font-weight: 500;">SCORE SEO GLOBAL</div>
+                </div>
+                
+                <div style="flex: 1;">
+                    <div style="
+                        display: flex; 
+                        align-items: center; 
+                        gap: 10px;
+                        margin-bottom: 8px;
+                    ">
+                        <div style="
+                            width: 120px; 
+                            height: 12px; 
+                            background: #e9ecef; 
+                            border-radius: 6px; 
+                            overflow: hidden;
+                        ">
+                            <div id="seo-progress" style="
+                                height: 100%; 
+                                width: 0%; 
+                                background: linear-gradient(90deg, #dc3545, #c82333);
+                                border-radius: 6px;
+                                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                            "></div>
+                        </div>
+                        <span id="seo-status" style="
+                            font-size: 12px; 
+                            font-weight: 600;
+                            padding: 2px 8px;
+                            border-radius: 12px;
+                            background: #e9ecef;
+                            color: #495057;
+                        ">EN ATTENTE</span>
+                    </div>
+                    
+                    <div style="font-size: 11px; color: #6c757d; margin-top: 5px;">
+                        <span id="seo-gauge-text">Commencez à remplir le formulaire</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="seo-details" style="display: none;">
+                <div style="
+                    background: white;
+                    border: 1px solid #e9ecef;
+                    border-radius: 6px;
+                    padding: 15px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                ">
+                    <div id="seo-score-header" class="seo-score-header">
+                        Score global : <span id="score-display">--</span>/100 (<span id="color-display">--</span>)
+                    </div>
+                    <div id="seo-checks-list" style="
+                        font-family: monospace;
+                        font-size: 12px;
+                        margin: 0;
+                        padding: 0;
+                        max-height: 300px;
+                        overflow-y: auto;
+                    ">
+                        <div style="color: #6c757d; padding: 10px;">En attente d'analyse...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" id="toggle-details" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 8px 15px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    transition: all 0.2s;
+                " onclick="toggleDetails()">
+                    <span>▶</span> Détails
+                </button>
+                
+                <button type="button" id="refresh-seo" style="
+                    background: #007bff;
+                    color: white;
+                    border: none;
+                    padding: 8px 15px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    transition: all 0.2s;
+                " onclick="analyzeSEO()">
+                    <span>🔄</span> Actualiser
+                </button>
+                
+                <div id="seo-auto-status" style="
+                    font-size: 11px;
+                    color: #28a745;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    margin-left: auto;
+                ">
+                    <span style="color: #28a745;">●</span> Analyse automatique activée
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+    {{ block.super }}
+    <script>
+        let isAnalyzing = false;
+        let detailsVisible = false;
+        let lastContent = '';
+
+        function toggleDetails() {
+            const details = document.getElementById('seo-details');
+            const button = document.getElementById('toggle-details');
+            const icon = button.querySelector('span');
+            detailsVisible = !detailsVisible;
+            details.style.display = detailsVisible ? 'block' : 'none';
+            icon.textContent = detailsVisible ? '▼' : '▶';
+            button.innerHTML = detailsVisible ? 
+                '<span>▼</span> Masquer détails' : 
+                '<span>▶</span> Voir détails';
+        }
+
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        function getFormData() {
+            return {
+                title: document.getElementById('id_title')?.value || '',
+                content: document.getElementById('id_content')?.value || '',
+                meta_description: document.getElementById('id_meta_description')?.value || '',
+                slug: document.getElementById('id_slug')?.value || '',
+                focus_keyword: document.getElementById('id_focus_keyword')?.value || '',
+                meta_title: document.getElementById('id_meta_title')?.value || '',
+            };
+        }
+
+        function getFieldStatusAndText(fieldName, data, fieldValue) {
+            // Afficher l'indicateur même pour les champs vides (neutre)
+            // Logique pour déterminer le statut et le texte de chaque champ
+            switch(fieldName) {
+                case 'title':
+                    if (data.checks && (data.checks['✅ Titre SEO (50-60 car.)'] === true || 
+                                       data.checks['✅ H1 unique avec mot-clé'] === true)) {
+                        return { status: 'good', text: 'Parfait' };
+                    } else if (data.checks && (data.checks['❌ Titre SEO (50-60 car.)'] === false || 
+                                             data.checks['❌ H1 unique avec mot-clé'] === false)) {
+                        return { status: 'warning', text: 'À améliorer' };
+                    }
+                    return { status: 'neutral', text: 'En attente' };
+                    
+                case 'focus_keyword':
+                    if (data.checks && data.checks['✅ Densité mot-clé (0.5-2%)'] === true) {
+                        return { status: 'good', text: 'Optimal' };
+                    } else if (data.checks && data.checks['❌ Densité mot-clé (0.5-2%)'] === false) {
+                        return { status: 'warning', text: 'À vérifier' };
+                    }
+                    return { status: 'neutral', text: 'En attente' };
+                    
+                case 'content':
+                    if (data.checks && data.checks['✅ ≥ 300 mots'] === true) {
+                        return { status: 'good', text: 'Suffisant' };
+                    } else if (data.checks && data.checks['❌ ≥ 300 mots'] === false) {
+                        return { status: 'bad', text: 'Trop court' };
+                    }
+                    return { status: 'neutral', text: 'En attente' };
+                    
+                case 'meta_description':
+                    if (data.checks && data.checks['✅ Meta description présente'] === true) {
+                        return { status: 'good', text: 'Présente' };
+                    } else if (data.checks && data.checks['❌ Meta description présente'] === false) {
+                        return { status: 'warning', text: 'Recommandée' };
+                    }
+                    return { status: 'neutral', text: 'Optionnelle' };
+                    
+                case 'slug':
+                    if (data.checks && data.checks['✅ Mot-clé dans URL'] === true) {
+                        return { status: 'good', text: 'Optimisé' };
+                    } else if (data.checks && data.checks['❌ Mot-clé dans URL'] === false) {
+                        return { status: 'warning', text: 'À améliorer' };
+                    }
+                    return { status: 'neutral', text: 'En attente' };
+                    
+                default:
+                    return { status: 'neutral', text: 'En attente' };
+            }
+        }
+
+        function formatChecksForDisplay(data) {
+            const checksList = document.getElementById('seo-checks-list');
+            const scoreDisplay = document.getElementById('score-display');
+            const colorDisplay = document.getElementById('color-display');
+            
+            if (!checksList) return;
+            
+            // Mettre à jour l'en-tête
+            if (data.score !== undefined) {
+                scoreDisplay.textContent = data.score;
+                
+                // Déterminer la couleur selon l'user story
+                let colorText = '';
+                if (data.score >= 75) {
+                    colorText = 'Vert';
+                } else if (data.score >= 50) {
+                    colorText = 'Orange';
+                } else {
+                    colorText = 'Rouge';
+                }
+                colorDisplay.textContent = colorText;
+            }
+            
+            checksList.innerHTML = '';
+            
+            // Format EXACT comme dans l'user story - exemple : Score global : 68/100 (Orange)
+            const formattedChecks = [];
+            
+            if (data.checks) {
+                // ✅ Mot-clé trouvé dans H1 (prioritaire)
+                if (data.checks['✅ H1 unique avec mot-clé'] === true) {
+                    formattedChecks.push('✅ Mot-clé trouvé dans H1');
+                } else {
+                    formattedChecks.push('❌ Mot-clé non trouvé dans H1');
+                }
+                
+                // ✅ Meta description présente
+                if (data.checks['✅ Meta description présente'] === true) {
+                    formattedChecks.push('✅ Meta description présente');
+                } else {
+                    formattedChecks.push('❌ Meta description manquante');
+                }
+                
+                // Messages basés sur le nombre de mots
+                if (data.checks['word_count'] !== undefined) {
+                    const wordCount = data.checks['word_count'];
+                    if (wordCount < 300) {
+                        formattedChecks.push(`❌ Trop peu de mots (${wordCount}, viser ≥ 300)`);
+                    } else if (wordCount < 800) {
+                        formattedChecks.push(`❌ Trop peu de mots (${wordCount}, viser ≥ 800)`);
+                    }
+                }
+                
+                // ❌ Pas de lien externe
+                if (data.checks['✅ Liens externes'] !== undefined && data.checks['✅ Liens externes'] >= 1) {
+                    // Ne rien afficher si OK
+                } else if (data.checks['word_count'] !== undefined && data.checks['word_count'] > 100) {
+                    formattedChecks.push('❌ Pas de lien externe');
+                }
+                
+                // ❌ Pas de texte alternatif sur l'image
+                if (data.checks['✅ Alt text avec mot-clé'] !== undefined && data.checks['✅ Alt text avec mot-clé'] > 0) {
+                    // Ne rien afficher si OK
+                } else if (data.checks['✅ Images présentes'] !== undefined && data.checks['✅ Images présentes'] > 0) {
+                    formattedChecks.push('❌ Pas de texte alternatif sur l\'image');
+                }
+                
+                // Messages supplémentaires seulement s'ils sont problématiques
+                if (data.checks['✅ Images présentes'] === 0 && data.checks['word_count'] !== undefined && data.checks['word_count'] > 200) {
+                    formattedChecks.push('❌ Pas d\'images');
+                }
+                
+                if (data.checks['✅ Liens internes'] === 0 && data.checks['word_count'] !== undefined && data.checks['word_count'] > 100) {
+                    formattedChecks.push('❌ Pas de lien interne');
+                }
+            }
+            
+            // Afficher les checks formatés EXACTEMENT comme dans l'user story
+            if (formattedChecks.length > 0) {
+                formattedChecks.forEach(checkText => {
+                    const div = document.createElement('div');
+                    div.className = 'check-item';
+                    
+                    if (checkText.startsWith('✅')) {
+                        div.className += ' check-success';
+                    } else if (checkText.startsWith('⚠️')) {
+                        div.className += ' check-warning';
+                    } else if (checkText.startsWith('❌')) {
+                        div.className += ' check-error';
+                    }
+                    
+                    div.textContent = checkText;
+                    checksList.appendChild(div);
+                });
+            } else if (data.checks && data.checks['word_count'] !== undefined && data.checks['word_count'] >= 300) {
+                // Si le contenu est suffisant, montrer les éléments positifs
+                checksList.innerHTML = `
+                    <div class="check-item check-success">✅ Mot-clé trouvé dans H1</div>
+                    <div class="check-item check-success">✅ Meta description présente</div>
+                    <div class="check-item check-success">✅ Contenu suffisant</div>
+                    <div class="check-item check-success">✅ Liens internes présents</div>
+                    <div class="check-item check-success">✅ Liens externes présents</div>
+                    <div class="check-item check-success">✅ Images avec texte alternatif</div>
+                `;
+            } else {
+                checksList.innerHTML = '<div style="color: #6c757d; padding: 10px;">Commencez à remplir le formulaire...</div>';
+            }
+        }
+
+        function updateFieldIndicators(data) {
+            const fieldMap = {
+                'id_title': 'title',
+                'id_content': 'content',
+                'id_focus_keyword': 'focus_keyword',
+                'id_meta_description': 'meta_description',
+                'id_slug': 'slug'
+            };
+
+            Object.keys(fieldMap).forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const fieldName = fieldMap[fieldId];
+                const fieldValue = field?.value || '';
+                
+                if (field && field.parentNode) {
+                    // Supprimer l'indicateur existant
+                    const existingContainer = field.parentNode.querySelector('.seo-indicator-container');
+                    if (existingContainer) {
+                        existingContainer.remove();
+                    }
+                    
+                    // Créer l'indicateur pour TOUS les champs (même vides)
+                    const statusInfo = getFieldStatusAndText(fieldName, data, fieldValue);
+                    if (statusInfo) {
+                        const container = document.createElement('div');
+                        container.className = 'seo-indicator-container';
+                        
+                        const indicator = document.createElement('span');
+                        indicator.className = `seo-indicator seo-indicator-${statusInfo.status}`;
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.className = `seo-indicator-text seo-indicator-text-${statusInfo.status}`;
+                        textSpan.textContent = statusInfo.text;
+                        textSpan.style.fontSize = '11px';
+                        
+                        container.appendChild(indicator);
+                        container.appendChild(textSpan);
+                        
+                        field.parentNode.style.display = 'flex';
+                        field.parentNode.style.alignItems = 'center';
+                        field.parentNode.appendChild(container);
+                    }
+                }
+            });
+        }
+
+        function updateUI(data) {
+            const scoreElement = document.getElementById('seo-score');
+            const progressElement = document.getElementById('seo-progress');
+            const statusElement = document.getElementById('seo-status');
+            const gaugeTextElement = document.getElementById('seo-gauge-text');
+
+            if (data.score !== undefined) {
+                scoreElement.textContent = data.score;
+                
+                // Update progress bar with smooth animation
+                progressElement.style.width = `${data.score}%`;
+                
+                // Update status and color based on score (EXACT comme dans l'user story)
+                if (data.score >= 75) {
+                    progressElement.style.background = 'linear-gradient(90deg, #28a745, #218838)';
+                    statusElement.textContent = 'BON';
+                    statusElement.style.background = '#d4edda';
+                    statusElement.style.color = '#155724';
+                    gaugeTextElement.textContent = 'Excellent travail SEO !';
+                } else if (data.score >= 50) {
+                    progressElement.style.background = 'linear-gradient(90deg, #fd7e14, #e06d06)';
+                    statusElement.textContent = 'MOYEN';
+                    statusElement.style.background = '#fff3cd';
+                    statusElement.style.color = '#856404';
+                    gaugeTextElement.textContent = 'Quelques améliorations possibles';
+                } else {
+                    progressElement.style.background = 'linear-gradient(90deg, #dc3545, #c82333)';
+                    statusElement.textContent = 'FAIBLE';
+                    statusElement.style.background = '#f8d7da';
+                    statusElement.style.color = '#721c24';
+                    gaugeTextElement.textContent = 'Optimisations majeures nécessaires';
+                }
+
+                // Update field indicators - TOUJOURS afficher
+                updateFieldIndicators(data);
+
+                // Update checks in user story format EXACT
+                formatChecksForDisplay(data);
+            }
+        }
+
+        async function analyzeSEO() {
+            if (isAnalyzing) return;
+            
+            const formData = getFormData();
+            const contentChanged = formData.content !== lastContent;
+            lastContent = formData.content;
+            
+            const hasContent = formData.title.length > 0 || formData.content.length > 50;
+            if (!hasContent) return;
+
+            isAnalyzing = true;
+            const scoreElement = document.getElementById('seo-score');
+            const statusElement = document.getElementById('seo-status');
+            const gaugeTextElement = document.getElementById('seo-gauge-text');
+            
+            scoreElement.textContent = '...';
+            statusElement.textContent = 'ANALYSE';
+            statusElement.style.background = '#d1ecf1';
+            statusElement.style.color = '#0c5460';
+            gaugeTextElement.textContent = 'Analyse en cours...';
+            
+            try {
+                const response = await fetch('/api/seo/analyze-direct/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const data = await response.json();
+                updateUI(data);
+                
+            } catch (error) {
+                console.error('Erreur SEO:', error);
+                scoreElement.textContent = 'ERR';
+                statusElement.textContent = 'ERREUR';
+                statusElement.style.background = '#f8d7da';
+                statusElement.style.color = '#721c24';
+                gaugeTextElement.textContent = 'Erreur d\'analyse';
+            } finally {
+                isAnalyzing = false;
+            }
+        }
+
+        function setupAutoRefresh() {
+            const fields = ['id_title', 'id_content', 'id_meta_description', 'id_focus_keyword', 'id_slug', 'id_meta_title'];
+            
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    let timeout;
+                    field.addEventListener('input', () => {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(analyzeSEO, 800);
+                    });
+                    field.addEventListener('paste', () => {
+                        setTimeout(analyzeSEO, 100);
+                    });
+                }
+            });
+        }
+
+        // Initialize and show indicators immediately
+        document.addEventListener('DOMContentLoaded', function() {
+            setupAutoRefresh();
+            // Initial analysis after a delay
+            setTimeout(analyzeSEO, 1000);
+        });
+    </script>
+{% endblock %}

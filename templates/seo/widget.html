@@ -1,0 +1,71 @@
+<!-- templates/seo/widget.html -->
+<div id="seo-widget" class="card">
+    <div class="card-header">
+        <h5>🔍 Analyse SEO</h5>
+    </div>
+    <div class="card-body">
+        <div class="seo-score-container">
+            <div id="seo-score" class="score-display">Score: --/100</div>
+            <div id="seo-gauge" class="gauge gauge--gray"></div>
+        </div>
+        
+        <div class="seo-breakdown">
+            <h6>Détail du score:</h6>
+            <ul id="seo-breakdown-list" class="list-unstyled">
+                <li>Contenu: <span id="content-score">0/30</span></li>
+                <li>Titres: <span id="titles-score">0/20</span></li>
+                <li>Meta: <span id="meta-score">0/15</span></li>
+                <li>Lisibilité: <span id="readability-score">0/15</span></li>
+                <li>Médias: <span id="media-score">0/10</span></li>
+                <li>Liens: <span id="links-score">0/10</span></li>
+            </ul>
+        </div>
+        
+        <div class="seo-suggestions">
+            <h6>Recommandations:</h6>
+            <ul id="seo-suggestions" class="list-group">
+                <li class="list-group-item">Analyse en cours...</li>
+            </ul>
+        </div>
+        
+        <button id="refresh-seo" class="btn btn-primary mt-3">
+            <i class="fas fa-sync-alt"></i> Actualiser l'analyse
+        </button>
+    </div>
+</div>
+
+<style>
+.gauge {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.gauge--red { background: linear-gradient(90deg, #ff4444 0%, #ff4444 100%); }
+.gauge--orange { background: linear-gradient(90deg, #ff8800 0%, #ff8800 75%); }
+.gauge--green { background: linear-gradient(90deg, #00c851 0%, #00c851 100%); }
+.gauge--gray { background: #ddd; }
+
+.score-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.check-item i {
+    margin-right: 10px;
+}
+
+.check-item.success { color: #00c851; }
+.check-item.warning { color: #ff8800; }
+.check-item.danger { color: #ff4444; }
+</style>

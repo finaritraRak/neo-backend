@@ -1,0 +1,65 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Lynkevo Admin') }}{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% static 'admin/img/lynkevo-logo.png' %}" alt="Lynkevo" style="height: 32px; margin-right: 10px;">
+        Lynkevo Admin
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    /* Custom admin styling */
+    #header {
+        background: linear-gradient(135deg, #FF0000 0%, #844F76 100%);
+        color: white;
+    }
+    
+    #site-name a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+    
+    .module h2, .module caption, .inline-group h2 {
+        background: #FF0000;
+        color: white;
+    }
+    
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: #FF0000;
+        border-color: #d70000;
+    }
+    
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+        background: #d70000;
+    }
+    
+    .selector-chosen h2 {
+        background: #844F76;
+    }
+    
+    a:link, a:visited {
+        color: #FF0000;
+    }
+    
+    .dashboard .module table th {
+        background: #f8f9fa;
+    }
+    
+    .dashboard .module {
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}

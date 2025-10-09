@@ -1,0 +1,8 @@
+# dashboard/urls.py
+
+from django.urls import path
+from .views import dashboard_stats  # ✅ on importe bien une vue existante
+
+urlpatterns = [
+    path('stats/', dashboard_stats, name='dashboard-stats'),  # ✅ OK
+]

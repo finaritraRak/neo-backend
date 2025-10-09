@@ -1,0 +1,27 @@
+<!-- templates/blog/article_form.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Widget SEO -->
+            <div id="seo-widget" data-article-id="{{ article.pk }}">
+                {% include 'seo/widget.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inclure le JavaScript -->
+<script src="{% static 'seo/seo-widget.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+Collecting django-ckeditor
+  Downloading django_ckeditor-6.7.3-py3-none-any.whl.metadata (33 kB)
+Requirement already satisfied: Django>=3.2 in c:\laragon\bin\python\python-3.10\lib\site-packages (from django-ckeditor) (4.2.7)
+Requirement already satisfied: django-js-asset>=2.0 in c:\laragon\bin\python\python-3.10\lib\site-packages (from django-ckeditor) (2.2.0)
+Requirement already satisfied: asgiref<4,>=3.6.0 in c:\laragon\bin\python\python-3.10\lib\site-packages (from Django>=3.2->django-ckeditor) (3.8.1)
+Requirement already satisfied: sqlparse>=0.3.1 in c:\laragon\bin\python\python-3.10\lib\site-packages (from Django>=3.2->django-ckeditor) (0.5.1)
+Requirement already satisfied: tzdata in c:\laragon\bin\python\python-3.10\lib\site-packages (from Django>=3.2->django-ckeditor) (2025.2)
+Requirement already satisfied: typing-extensions>=4 in c:\laragon\bin\python\python-3.10\lib\site-packages (from asgiref<4,>=3.6.0->Django>=3.2->django-ckeditor) (4.12.2)
+Downloading django_ckeditor-6.7.3-py3-none-any.whl (2.5 MB)
+   ---------------------------------------- 2.5/2.5 MB 1.8 MB/s eta 0:00:00
+Installing collected packages: django-ckeditor
+Successfully installed django-ckeditor-6.7.3

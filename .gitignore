@@ -1,0 +1,51 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.sqlite3
+*.db
+
+# --- Environnement virtuel ---
+venv/
+env/
+.venv/
+
+# --- Django-specific ---
+*.log
+*.pot
+*.pyc
+db.sqlite3
+/media/
+staticfiles/
+static/
+local_settings.py
+
+# --- VSCode / PyCharm ---
+.vscode/
+.idea/
+
+# --- macOS / Linux system files ---
+.DS_Store
+Thumbs.db
+
+# --- Environment variables ---
+.env
+.env.*
+
+# --- Node / Frontend (si React est intégré dans ton projet Django) ---
+node_modules/
+dist/
+build/
+
+# --- Coverage / Tests ---
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+
+# --- Backup / Temp ---
+*.bak
+*.swp
+*.tmp
