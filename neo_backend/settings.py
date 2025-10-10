@@ -27,9 +27,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
-    '206.189.117.17',
-    'dev.calm-adventure-tours.com',  
-    'www.dev.calm-adventure-tours.com', 
+    '206.189.117.17', 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -67,6 +65,10 @@ INSTALLED_APPS = [
     'ckeditor_uploader',  
     'django_ckeditor_5', 
     'notifications',
+    'companies',
+    'sites',
+    'energy_data',
+    'alarms',
 ]
 
 ASGI_APPLICATION = 'neo_backend.asgi.application'
@@ -298,7 +300,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Assure-toi que SessionAuthentication n'est PAS dans les classes d'authentification
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # ✅ Seulement JWT
+        'rest_framework_simplejwt.authentication.JWTAuthentication', 
         # 'rest_framework.authentication.SessionAuthentication',  ← À COMMENTER ou SUPPRIMER
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -331,7 +333,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5174",
     "http://localhost:5175",
     "http://127.0.0.1:5175",
-    "https://dev.calm-adventure-tours.com   ",  
+   
 ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
