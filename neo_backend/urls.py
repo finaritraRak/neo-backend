@@ -12,7 +12,10 @@ urlpatterns = [
     path('api/dashboard/', include('dashboard.urls')),
     path('api/permissions/', include('permissions.urls')),
     path('api/settings/', include('settings.urls')),
-    
+    path('api/sites/', include('sites.urls')),
+    path('api/energy/', include('energy_data.urls')),
+    path('api/companies/', include('companies.urls')),
+    path('api/alarms/', include('alarms.urls')),
     path('api/notifications/', include('notifications.urls')),
 
     path('api/', include('apps.core.urls')),

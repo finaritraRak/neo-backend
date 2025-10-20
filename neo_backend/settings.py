@@ -39,7 +39,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5175",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://dev.calm-adventure-tours.com   ",  
 ]
 
 # Application definition
